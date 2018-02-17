@@ -1,3 +1,5 @@
+require 'octokit'
+
 module ReleaseManager
   class Release
     attr_reader :access_token, :pr_number, :repo

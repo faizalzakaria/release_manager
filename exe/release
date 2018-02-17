@@ -4,7 +4,6 @@ libdir = File.join(File.dirname(__FILE__), '/../lib')
 $LOAD_PATH.unshift(libdir)
 
 require 'optparse'
-require 'octokit'
 
 options = {
   repo: 'faizalzakaria/test_release',
