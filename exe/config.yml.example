@@ -1,0 +1,4 @@
+:repo: 'faizalzakaria/test_release'
+:access_token: 'abc'
+:slack_webhook_url: 'https://hooks.slack.com/services/abc'
+:release_manager: 'fai'
