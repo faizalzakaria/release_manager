@@ -12,6 +12,7 @@ module ReleaseManager
       @repo              = options[:repo]
       @slack_webhook_url = options[:slack_webhook_url]
       @release_manager   = options[:release_manager]
+      @channel           = options[:channel]
     end
 
     def release
@@ -36,7 +37,8 @@ module ReleaseManager
         tag_name: release.tag_name,
         repo: release.repo || @repo,
         slack_webhook_url: @slack_webhook_url,
-        release_manager: @release_manager
+        release_manager: @release_manager,
+        channel: @channel
       ).notify
     end
   end

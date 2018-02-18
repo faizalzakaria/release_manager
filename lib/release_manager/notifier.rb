@@ -5,11 +5,12 @@ module ReleaseManager
   class Notifier
     attr_reader :repo, :tag_name, :slack_webhook_url
 
-    def initialize(repo:, tag_name:, slack_webhook_url:, release_manager:)
+    def initialize(repo:, tag_name:, slack_webhook_url:, release_manager:, channel:)
       @repo              = repo
       @tag_name          = tag_name
       @slack_webhook_url = slack_webhook_url
       @release_manager   = release_manager
+      @channel           = channel
     end
 
     def notify
@@ -24,10 +25,14 @@ module ReleaseManager
 
     def payload
       {
-        channel: '#hearttop',
+        channel: channel,
         username: release_manager,
         text: default_template
       }.to_json.to_s
+    end
+
+    def channel
+      @channel || '#news'
     end
 
     def github_url
