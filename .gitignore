@@ -15,3 +15,7 @@ config.*
 
 # Notes
 .fai.note.md
+
+# rvmrc
+.rvmrc
+
