@@ -2,10 +2,23 @@
 
 Automation for your release process.
 
+## What it does ?
+
+- [x] Given a PR number, it will create a release out of it for you.
+- [x] It will copy the PR description/summary into the release notes.
+- [x] It will set the release title as your PR title.
+- [x] It will notify you (for now only slack & stdout).
+
+## Pre-requisites
+
+```shell
+cp config.yml.example config.yml
+```
+
 ## How To ?
 
 ```shell
-release -c release-manager-config.yml -n 1
+release -c config.yml -n 1
 ```
 
 ## Contributing
