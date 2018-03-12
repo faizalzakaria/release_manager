@@ -17,6 +17,8 @@ module ReleaseManager
     def release
       if (release = create_release)
         notify(release)
+      else
+        puts 'Failed to create a release!'
       end
     end
 
@@ -36,7 +38,7 @@ module ReleaseManager
         tag_name: release.tag_name,
         repo: release.repo || @repo,
         release_manager: @release_manager,
-        options: @notifiers
+        options: @notifier_configs
       ).notify
     end
   end

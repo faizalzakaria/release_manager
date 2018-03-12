@@ -1,11 +1,12 @@
 # coding: utf-8
 require 'json'
-Dir.glob('lib/release_manager/notifiers/*.rb').each { |f| require_relative File.join('notifiers', File.basename(f)) }
+$notifiers_dir = File.expand_path(File.join(File.dirname(__FILE__), 'notifiers'))
+Dir.glob("#{$notifiers_dir}/*.rb").each { |f| require_relative File.join('notifiers', File.basename(f)) }
 
 module ReleaseManager
   class Notifier
 
-    NOTIFIERS = Dir.glob('lib/release_manager/notifiers/*.rb').map { |f| File.basename(f, '.rb') }
+    NOTIFIERS = Dir.glob("#{$notifiers_dir}/*.rb").map { |f| File.basename(f, '.rb') }
 
     def initialize(repo:, tag_name:, release_manager:, options:)
       @repo              = repo
