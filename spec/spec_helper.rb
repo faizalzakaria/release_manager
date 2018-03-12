@@ -1,5 +1,6 @@
 require 'bundler/setup'
 require 'release_manager'
+Dir.glob('release_manager/**/*.rb').each { |f| require f }
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
