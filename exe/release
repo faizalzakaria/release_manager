@@ -27,7 +27,7 @@ op = OptionParser.new do |opts|
   END
 
   opts.on('-r', '--repo <faizalzakaria/release_manager>', 'Repo') do |v|
-    options[:repo] = v
+xs    options[:repo] = v
   end
   opts.on('-t', '--tag_name <v3.0.0>', 'Tag name of your release') do |v|
     options[:tag_name] = v
@@ -41,14 +41,8 @@ op = OptionParser.new do |opts|
   opts.on('-c', '--config <config.yml>', 'Config file') do |v|
     options[:config] = v
   end
-  opts.on('-s', '--slack_webhook <https://hooks.slack.com/services/abc>', 'Slack webhook url') do |v|
-    options[:slack_webhook_url] = v
-  end
   opts.on('-m', '--release_manager <fai>', 'Release manager name, to be displayed in Slack') do |v|
     options[:release_manager] = v
-  end
-  opts.on('-h', '--channel <#news>', 'Slack Channel to post to') do |v|
-    options[:channel] = v
   end
 end
 op.parse!

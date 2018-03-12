@@ -12,3 +12,6 @@
 
 # configs
 config.*
+
+# Notes
+.fai.note.md

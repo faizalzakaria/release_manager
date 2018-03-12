@@ -5,7 +5,7 @@ namespace :deploy do
 end
 
 namespace :release_manager do
-  desc 'Release manager'
+  desc "Release manager"
   task :deploy do
     role = roles(:all, select: :primary).first || roles(:all).first
     on role do
@@ -44,6 +44,7 @@ namespace :release_manager do
   end
 
   def generate_release
+
     puts 'hell'
   end
 
