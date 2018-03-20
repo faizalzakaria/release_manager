@@ -9,6 +9,49 @@ Automation for your release process.
 - [x] It will set the release title as your PR title.
 - [x] It will notify you (for now only slack & stdout).
 
+## Installation
+- **Install as a system gem:**
+  ```sh
+	git clone git@github.com:faizalzakaria/release_manager.git
+  cd release_manager
+  bundle
+  ```
+## Usage
+- **Create a config.yml**
+  ```sh
+  touch config.yml
+  ```
+  ```sh
+  :repo: [Insert github repo name here]
+  :access_token: [Insert access token here]
+  :release_manager: [Insert your name here]
+  :notifiers:
+    :slack:
+      :enabled: true
+      :webhook_url: [Insert slack webhook here]
+      :channel: [Insert slack channel here]
+    :stdout:
+      :enabled: true
+  ```
+  - Repo
+    - 'myprojects/sample-project'
+  - Access token
+    - In Github, you can generate one here: https://github.com/settings/tokens
+    - **Generate new token** → **Check 'repo'** → **Generate token**
+  - Slack webhook
+      - In Slack, you can create webhooks here: https://get.slack.help/hc/en-us/articles/115005265063-Incoming-WebHooks-for-Slack#set-up-incoming-webhooks
+      - Should look like: 'https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX'
+  - Slack channel
+    - Should look like: '#news'
+
+- **Run it**
+  ```sh
+  ./exe/release -c config.yml -n [Insert pull request number]
+  ```
+  - Pull request number
+    - https://github.com/my-projects/sample-project/pull/1744
+    - PR number should look like: 1744
+
 ## Pre-requisites
 
 ```shell
