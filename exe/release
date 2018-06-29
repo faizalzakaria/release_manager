@@ -27,7 +27,7 @@ op = OptionParser.new do |opts|
   END
 
   opts.on('-r', '--repo <faizalzakaria/release_manager>', 'Repo') do |v|
-xs    options[:repo] = v
+    options[:repo] = v
   end
   opts.on('-t', '--tag_name <v3.0.0>', 'Tag name of your release') do |v|
     options[:tag_name] = v

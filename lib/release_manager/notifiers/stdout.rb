@@ -1,7 +1,7 @@
 # coding: utf-8
 module ReleaseManager
     class Stdout
-      def initialize(_option = {})
+      def initialize(_option)
         # Do nothing
       end
 
