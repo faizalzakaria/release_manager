@@ -1,65 +1,27 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 libdir = File.join(File.dirname(__FILE__), '/../lib')
 $LOAD_PATH.unshift(libdir)
 
-require 'optparse'
+require 'release_manager'
 
-options = {
-  repo: 'faizalzakaria/test_release',
-  access_token: nil,
-  tag_name: nil,
-  pr_number: nil,
-  config: nil
-}
-
-op = OptionParser.new do |opts|
-  opts.banner = <<~END
-  Usage: generate_release -r <faizalzakaria/release_manager>
-                          -t <v3.0.0>
-                          -n <1>
-                          -a <1341jkh5315jk3h5>
-                          -c config.yml
-                          -s https://hooks.slack.com/services/abc
-
-  Generate release for a given PR number.
-
-  END
-
-  opts.on('-r', '--repo <faizalzakaria/release_manager>', 'Repo') do |v|
-    options[:repo] = v
-  end
-  opts.on('-t', '--tag_name <v3.0.0>', 'Tag name of your release') do |v|
-    options[:tag_name] = v
-  end
-  opts.on('-n', '--pr_number <1>', 'Pull request number') do |v|
-    options[:pr_number] = v
-  end
-  opts.on('-a', '--access_token <34141k4jhkh>', 'Access Token') do |v|
-    options[:access_token] = v
-  end
-  opts.on('-c', '--config <config.yml>', 'Config file') do |v|
-    options[:config] = v
-  end
-  opts.on('-m', '--release_manager <fai>', 'Release manager name, to be displayed in Slack') do |v|
-    options[:release_manager] = v
-  end
-end
-op.parse!
-
-if options[:config]
-  require 'yaml'
-  config = YAML.load_file(options[:config])
-  options.merge!(config)
+def help
+  puts 'Missing or unknown action'
+  puts 'Example:'
+  puts "release prepare"
+  puts "release announce"
 end
 
-puts options
-
-unless options[:repo] && options[:pr_number] && options[:access_token]
-  puts op.help
-  exit 16
+if ARGV[0].nil?
+  help
+elsif ARGV[0] == 'prepare'
+  puts "Preparing a release"
+  ReleaseManager.prepare
+elsif ARGV[0] == 'announce'
+  puts "Announcing a release"
+  ReleaseManager.announce
+else
+  help
 end
 
-require 'release_manager/base'
-
-ReleaseManager::Base.new(options).release

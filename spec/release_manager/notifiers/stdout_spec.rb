@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ReleaseManager::Stdout do
   describe '.notify' do
     it 'works' do
