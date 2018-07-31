@@ -11,10 +11,13 @@ module ReleaseManager
       @repo         = build_auth_options[:repo]
 
       @pr           = options[:pr]
+      @dry_run      = options.fetch(:dry_run, false)
     end
 
     # Create Pull Request
     def prepare(title, notes)
+      return prepare_dry_run(title, notes) if dry_run?
+
       if pr
         github_client.update_pull_request(repo, pr, title: title, body: notes)
       else
@@ -24,6 +27,8 @@ module ReleaseManager
 
     # Create Tag
     def create
+      return create_dry_run if dry_run?
+
       unless pull_merged?
         puts 'Pull Request is not merged yet'
         return
@@ -33,6 +38,31 @@ module ReleaseManager
 
     def tag_name
       @tag_name ||= pull_request.title
+    end
+
+    def prepare_dry_run(title, notes)
+      puts '-' * 32
+      if pr
+        puts "Updating PR #{pr} ..."
+      else
+        puts 'Creating PR ...'
+      end
+
+      puts '-' * 32
+      puts title
+      puts '-' * 32
+      puts notes
+    end
+
+    def create_dry_run
+      puts '-' * 32
+      puts "Creating Tag #{tag_name} ..."
+      puts '-' * 32
+      true
+    end
+
+    def dry_run?
+      @dry_run
     end
 
     private

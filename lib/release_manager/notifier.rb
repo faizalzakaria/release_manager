@@ -9,17 +9,24 @@ module ReleaseManager
   class Notifier
     NOTIFIERS = Dir.glob("#{$notifiers_dir}/*.rb").map { |f| File.basename(f, '.rb') }
 
-    def initialize(repo:, tag_name:, user:)
+    attr_reader :user, :repo, :tag_name
+
+    def initialize(repo:, tag_name:, user:, dry_run: false)
       @repo     = repo
       @tag_name = tag_name
       @user     = user
+      @dry_run  = dry_run
     end
 
     def notify
       NOTIFIERS.each do |notifier|
         klazz = ReleaseManager.const_get(camelize(notifier))
-        klazz.new.notify(default_template, user: @user)
+        klazz.new.notify(default_template, user, dry_run: dry_run?)
       end
+    end
+
+    def dry_run?
+      @dry_run
     end
 
     private
@@ -29,7 +36,7 @@ module ReleaseManager
     end
 
     def release_url
-      github_url + @repo + '/releases/tag/' + @tag_name
+      github_url + repo + '/releases/tag/' + tag_name
     end
 
     def template
@@ -42,7 +49,7 @@ module ReleaseManager
 
     def default_template
       <<~END
-        :tada: *#{@tag_name}* · _#{date_today}_
+        :tada: *#{tag_name}* · _#{date_today}_
         > More info can be found here,
         > *Changelog*: #{release_url}
       END
