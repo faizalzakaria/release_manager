@@ -1,35 +1,28 @@
 # coding: utf-8
+# frozen_string_literal: true
+
 require 'json'
 $notifiers_dir = File.expand_path(File.join(File.dirname(__FILE__), 'notifiers'))
 Dir.glob("#{$notifiers_dir}/*.rb").each { |f| require_relative File.join('notifiers', File.basename(f)) }
 
 module ReleaseManager
   class Notifier
-
     NOTIFIERS = Dir.glob("#{$notifiers_dir}/*.rb").map { |f| File.basename(f, '.rb') }
 
-    def initialize(repo:, tag_name:, release_manager:, options:)
-      @repo              = repo
-      @tag_name          = tag_name
-      @release_manager   = release_manager
-      @options           = options
+    def initialize(repo:, tag_name:, user:)
+      @repo     = repo
+      @tag_name = tag_name
+      @user     = user
     end
 
     def notify
       NOTIFIERS.each do |notifier|
-        next unless (config = @options[notifier.to_sym])
-        next unless config[:enabled]
-
         klazz = ReleaseManager.const_get(camelize(notifier))
-        klazz.new(config).notify(default_template, release_manager: release_manager)
+        klazz.new.notify(default_template, user: @user)
       end
     end
 
     private
-
-    def release_manager
-      @release_manager || 'fai'
-    end
 
     def github_url
       'https://github.com/'
@@ -44,24 +37,24 @@ module ReleaseManager
     end
 
     def date_today
-      Time.now.strftime("%b %d")
+      Time.now.strftime('%b %d')
     end
 
     def default_template
       <<~END
-      :tada: *#{@tag_name}* · _#{date_today}_
-      > More info can be found here,
-      > *Changelog*: #{release_url}
+        :tada: *#{@tag_name}* · _#{date_today}_
+        > More info can be found here,
+        > *Changelog*: #{release_url}
       END
     end
 
     def camelize(string, uppercase_first_letter = true)
-      if uppercase_first_letter
-        string = string.sub(/^[a-z\d]*/) { $&.capitalize }
-      else
-        string = string.sub(/^(?:(?=\b|[A-Z_])|\w)/) { $&.downcase }
-      end
-      string.gsub(/(?:_|(\/))([a-z\d]*)/) { "#{$1}#{$2.capitalize}" }.gsub('/', '::')
+      string = if uppercase_first_letter
+                 string.sub(/^[a-z\d]*/) { $&.capitalize }
+               else
+                 string.sub(/^(?:(?=\b|[A-Z_])|\w)/) { $&.downcase }
+               end
+      string.gsub(/(?:_|(\/))([a-z\d]*)/) { "#{Regexp.last_match(1)}#{Regexp.last_match(2).capitalize}" }.gsub('/', '::')
     end
   end
 end

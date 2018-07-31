@@ -1,0 +1,13 @@
+# Also see:
+#
+# - http://rubocop.readthedocs.io/en/latest/configuration/
+# - https://github.com/bbatsov/rubocop/blob/master/config/default.yml
+#
+
+AllCops:
+  Exclude:
+    - 'exe/**/*'
+  TargetRubyVersion: 2.3
+
+Bundler/OrderedGems:
+  Enabled: false

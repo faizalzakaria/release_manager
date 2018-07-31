@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'bundler/setup'
 require 'release_manager'
 Dir.glob('release_manager/**/*.rb').each { |f| require f }

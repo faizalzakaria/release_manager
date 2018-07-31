@@ -1,6 +1,7 @@
-RSpec.describe ReleaseManager::Notifier do
+# frozen_string_literal: true
 
-  it { expect(ReleaseManager::Notifier::NOTIFIERS).to eql(['slack', 'stdout']) }
+RSpec.describe ReleaseManager::Notifier do
+  it { expect(ReleaseManager::Notifier::NOTIFIERS).to eql(%w[slack stdout]) }
 
   describe '.notify' do
     let(:params) do
@@ -13,7 +14,7 @@ RSpec.describe ReleaseManager::Notifier do
     end
 
     context 'all is enabled' do
-      let(:new_params) { params.merge({ options: { slack: { enabled: true }, stdout: { enabled: true } } }) }
+      let(:new_params) { params.merge(options: { slack: { enabled: true }, stdout: { enabled: true } }) }
 
       it 'notify all the notifiers' do
         expect_any_instance_of(ReleaseManager::Slack).to receive(:notify)

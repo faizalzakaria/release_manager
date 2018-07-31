@@ -1,16 +1,28 @@
+# frozen_string_literal: true
+
 require 'octokit'
 
 module ReleaseManager
   class Release
-    attr_reader :access_token, :pr_number, :repo
+    attr_reader :access_token, :pr, :repo
 
-    def initialize(options)
-      @access_token = options[:access_token]
-      @pr_number    = options[:pr_number]
-      @tag_name     = options[:tag_name]
-      @repo         = options[:repo]
+    def initialize(options = {})
+      @access_token = build_auth_options[:access_token]
+      @repo         = build_auth_options[:repo]
+
+      @pr           = options[:pr]
     end
 
+    # Create Pull Request
+    def prepare(title, notes)
+      if pr
+        github_client.update_pull_request(repo, pr, title: title, body: notes)
+      else
+        github_client.create_pull_request(repo, 'master', 'develop', title, notes)
+      end
+    end
+
+    # Create Tag
     def create
       unless pull_merged?
         puts 'Pull Request is not merged yet'
@@ -30,11 +42,11 @@ module ReleaseManager
     end
 
     def pull_merged?
-      github_client.pull_merged?(repo, pr_number)
+      github_client.pull_merged?(repo, pr)
     end
 
     def pull_request
-      github_client.close_pull_request(repo, pr_number)
+      github_client.close_pull_request(repo, pr)
     end
 
     def merge_commit_sha
@@ -47,6 +59,10 @@ module ReleaseManager
 
     def create_release
       github_client.create_release(repo, tag_name, body: release_notes, name: tag_name, draft: false, target_commitish: merge_commit_sha)
+    end
+
+    def build_auth_options
+      ReleaseManager::AuthOptionBuilder::Github.build_auth_options
     end
   end
 end
