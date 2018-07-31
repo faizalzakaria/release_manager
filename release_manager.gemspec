@@ -21,7 +21,6 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_runtime_dependency 'capistrano', '>= 0'
   spec.add_runtime_dependency 'jira-ruby', '>= 0'
   spec.add_runtime_dependency 'json', '>= 0'
   spec.add_runtime_dependency 'octokit', '>= 0'
