@@ -9,8 +9,8 @@ module ReleaseManager
           prompt = TTY::Prompt.new
 
           result = prompt.collect do
-            key(:repo).ask('Repo (ex: faizalzakaria/test_release):', required: true)
-            key(:access_token).ask('Access token:', required: true)
+            key(:repo).ask('[GITHUB] Repo (ex: faizalzakaria/test_release):', required: true)
+            key(:access_token).ask('[GITHUB] Access token:', required: true)
           end
 
           result

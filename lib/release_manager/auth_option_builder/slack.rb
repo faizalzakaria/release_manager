@@ -9,8 +9,8 @@ module ReleaseManager
           prompt = TTY::Prompt.new
 
           result = prompt.collect do
-            key(:webhook_url).ask('Webhook url (ex: https://hooks.slack.com/services/T09NLCN11/B6M3ZM6QG/WEWQ831)', required: true)
-            key(:channel).ask('Channel: (default: #news)', default: "#news")
+            key(:webhook_url).ask('[SLACK] Webhook url (ex: https://hooks.slack.com/services/T09NLCN11/B6M3ZM6QG/WEWQ831)', required: true)
+            key(:channel).ask('[SLACK] Channel: (default: #news)', default: "#news")
           end
 
           result

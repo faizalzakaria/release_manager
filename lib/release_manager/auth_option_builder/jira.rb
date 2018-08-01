@@ -10,11 +10,11 @@ module ReleaseManager
           prompt = TTY::Prompt.new
 
           result = prompt.collect do
-            key(:site).ask('Site (ex: https://myjira.atlassian.net):', required: true)
-            key(:context_path).ask('Jira path in your site (just press enter if you don\'t have):', default: '')
-            key(:username).ask('Username:', required: true)
-            key(:password).mask('Password:', required: true)
-            key(:project).ask('Project (ex: OA)', required: true)
+            key(:site).ask('[JIRA] Site (ex: https://myjira.atlassian.net):', required: true)
+            key(:context_path).ask('[JIRA] Jira path in your site (just press enter if you don\'t have):', default: '')
+            key(:username).ask('[JIRA] Username:', required: true)
+            key(:password).mask('[JIRA] Password:', required: true)
+            key(:project).ask('[JIRA] Project (ex: OA)', required: true)
           end
 
           result[:auth_type] = :basic
