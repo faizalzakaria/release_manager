@@ -9,7 +9,6 @@ module ReleaseManager
           prompt = TTY::Prompt.new
 
           result = prompt.collect do
-            key(:enabled).yes?('Enabled?')
             key(:webhook_url).ask('Webhook url (ex: https://hooks.slack.com/services/T09NLCN11/B6M3ZM6QG/WEWQ831)', required: true)
             key(:channel).ask('Channel: (default: #news)', default: "#news")
           end
