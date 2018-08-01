@@ -8,10 +8,11 @@ module ReleaseManager
       class Base
         attr_reader :project, :sprint, :max_results
 
-        def initialize(sprint:, max_results: 50)
+        def initialize(sprint:, max_results: 50, custom_jql: nil)
           @project     = build_auth_options[:project]
           @sprint      = sprint
           @max_results = max_results
+          @jql         = custom_jql
         end
 
         def generate

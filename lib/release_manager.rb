@@ -26,18 +26,25 @@ module ReleaseManager
   #
   def prepare
     prompt = TTY::Prompt.new
-    result = prompt.collect do
+    configs = prompt.collect do
       key(:title).ask('Pull request Title (ex: v3.15.0)', required: true)
-      key(:sprint).ask("Sprint (ex: 'v3.15 Jul31')", required: true)
-      key(:pr).ask("Pull request number, set this if you need to update pull request (ex: 2222))")
-      key(:dry_run).yes?("Dry run?")
+      key(:custom_jql).ask("Custom JQL (set this if you need to do a custom jql, leave empty otherwise)")
     end
 
+    if configs[:custom_jql].nil?
+      configs.merge!(prompt.collect do
+        key(:sprint).ask("Sprint (ex: 'v3.15 Jul31')", required: true)
+        key(:pr).ask("Pull request number, set this if you need to update pull request (ex: 2222))")
+      end)
+    end
+
+    configs.merge!(prompt.collect { key(:dry_run).yes?("Dry run?") })
+
     Release
-      .new(pr: result[:pr], dry_run: result[:dry_run])
+      .new(pr: configs[:pr], dry_run: configs[:dry_run])
       .prepare(
-        result[:title],
-        NotesGenerator::generate_from_jira(result[:sprint])
+        configs[:title],
+        NotesGenerator::generate_from_jira(configs[:sprint], configs[:custom_jql])
       )
   end
 
@@ -49,19 +56,19 @@ module ReleaseManager
   #    ReleaseManager.announce(2222, 'fai')
   def announce
     prompt = TTY::Prompt.new
-    result = prompt.collect do
+    configs = prompt.collect do
       key(:pr).ask("Pull request number (ex: 2222))", required: true)
       key(:user).ask("Release Manager (ex: 'fai')", required: true)
       key(:dry_run).yes?("Dry run?")
     end
 
-    release = Release.new(pr: result[:pr], dry_run: result[:dry_run])
+    release = Release.new(pr: configs[:pr], dry_run: configs[:dry_run])
     if (release.create)
       Notifier.new(
         tag_name: release.tag_name,
         repo: release.repo,
-        user: result[:user],
-        dry_run: result[:dry_run]
+        user: configs[:user],
+        dry_run: configs[:dry_run]
       ).notify
     else
       puts 'Failed to create a release!'

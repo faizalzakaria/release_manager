@@ -9,8 +9,8 @@ require_relative './notes_generator/jira/base'
 module ReleaseManager
   module NotesGenerator
     # Return string as markdown
-    def generate_from_jira(sprint)
-      Jira::Base.new(sprint: sprint).generate
+    def generate_from_jira(sprint, custom_jql = nil)
+      Jira::Base.new(sprint: sprint, custom_jql: custom_jql).generate
     end
 
     module_function :generate_from_jira
