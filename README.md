@@ -2,6 +2,8 @@
 
 Automation for your release process.
 
+![mnfdkgz6he](https://user-images.githubusercontent.com/3461316/43674373-c5865c20-9805-11e8-84ca-0a3f0be2511f.gif)
+
 ## What it does ?
 
 - [x] Given a PR number, it will create a release out of it for you.
