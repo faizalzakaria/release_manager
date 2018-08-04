@@ -10,7 +10,7 @@ module ReleaseManager
 
           result = prompt.collect do
             key(:repo).ask('[GITHUB] Repo (ex: faizalzakaria/test_release):', required: true)
-            key(:access_token).ask('[GITHUB] Access token (https://docs.cachethq.io/v1.0/docs/github-oauth-token)', required: true)
+            key(:access_token).mask('[GITHUB] Access token (https://github.com/settings/tokens)', required: true)
           end
 
           result
