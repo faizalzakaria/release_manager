@@ -3,14 +3,17 @@
 require 'octokit'
 
 module ReleaseManager
+  #
+  # Release
+  #
   class Release
-    attr_reader :access_token, :pr, :repo
+    attr_reader :access_token, :pr_id, :repo
 
     def initialize(options = {})
       @access_token = build_auth_options[:access_token]
       @repo         = build_auth_options[:repo]
 
-      @pr           = options[:pr]
+      @pr_id        = options[:pr_id]
       @dry_run      = options.fetch(:dry_run, false)
     end
 
@@ -18,10 +21,10 @@ module ReleaseManager
     def prepare(title, notes)
       return prepare_dry_run(title, notes) if dry_run?
 
-      if pr
-        github_client.update_pull_request(repo, pr, title: title, body: notes)
+      if pr_id
+        update_pr(pr_id, title, notes)
       else
-        github_client.create_pull_request(repo, 'master', 'develop', title, notes)
+        create_pr(title_notes)
       end
     end
 
@@ -42,8 +45,8 @@ module ReleaseManager
 
     def prepare_dry_run(title, notes)
       puts '-' * 32
-      if pr
-        puts "Updating PR #{pr} ..."
+      if pr_id
+        puts "Updating PR #{pr_id} ..."
       else
         puts 'Creating PR ...'
       end
@@ -87,8 +90,34 @@ module ReleaseManager
       pull_request.body
     end
 
+    def create_pr(title, notes)
+      github_client.create_pull_request(
+        repo,
+        'master',
+        'develop',
+        title,
+        notes
+      )
+    end
+
+    def update_pr(pr_id, title, notes)
+      github_client.update_pull_request(
+        repo,
+        pr_id,
+        title: title,
+        body: notes
+      )
+    end
+
     def create_release
-      github_client.create_release(repo, tag_name, body: release_notes, name: tag_name, draft: false, target_commitish: merge_commit_sha)
+      github_client.create_release(
+        repo,
+        tag_name,
+        body: release_notes,
+        name: tag_name,
+        draft: false,
+        target_commitish: merge_commit_sha
+      )
     end
 
     def build_auth_options

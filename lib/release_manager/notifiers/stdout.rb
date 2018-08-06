@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module ReleaseManager
+  #
+  # Stdout notifier
+  #
   class Stdout
     def initialize
       # Do nothing

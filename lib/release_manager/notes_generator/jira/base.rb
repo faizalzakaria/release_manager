@@ -23,10 +23,9 @@ module ReleaseManager
         def epics
           @epics ||= begin
                        issues = client.Issue.jql(epics_jql, max_results: 100)
-                       issues.reduce({}) do |memo, issue|
+                       issues.each_with_object({}) do |issue, memo|
                          key = issue.attrs['key']
                          memo[key] = issue.attrs['fields']['summary']
-                         memo
                        end
                      end
         end

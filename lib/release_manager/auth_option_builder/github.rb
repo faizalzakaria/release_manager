@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # Github
 #
@@ -5,7 +7,7 @@ module ReleaseManager
   module AuthOptionBuilder
     class Github < Base
       class << self
-        def build_auth_options_by_tty(options = {})
+        def build_auth_options_by_tty(_options = {})
           prompt = TTY::Prompt.new
 
           result = prompt.collect do

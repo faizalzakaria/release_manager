@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # Base
 #
@@ -21,7 +23,7 @@ module ReleaseManager
           FileCache.clear_all
         end
 
-        def build_auth_options_by_tty(options = {})
+        def build_auth_options_by_tty(_options = {})
           raise NotImplementedError
         end
 

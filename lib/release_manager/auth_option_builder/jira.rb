@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # Jira
 #
@@ -5,7 +7,7 @@ module ReleaseManager
   module AuthOptionBuilder
     class Jira < Base
       class << self
-        def build_auth_options_by_tty(options = {})
+        def build_auth_options_by_tty(_options = {})
           puts 'Login will be required...'
           prompt = TTY::Prompt.new
 

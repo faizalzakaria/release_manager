@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module ReleaseManager
+  #
+  # Slack notifier
+  #
   class Slack
     attr_reader :webhook_url, :channel
 
