@@ -11,6 +11,7 @@ require 'release_manager/template'
 require 'release_manager/notifier'
 require 'release_manager/prepare_service'
 require 'release_manager/announce_service'
+require 'release_manager/reset_cli'
 require 'release_manager/cli'
 require 'release_manager/client'
 

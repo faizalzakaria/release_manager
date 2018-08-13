@@ -13,7 +13,6 @@ module ReleaseManager
       ReleaseManager::Client::Github.build_auth_options
       ReleaseManager::Client::Jira.build_auth_options
       ReleaseManager::Client::Slack.build_auth_options
-
       puts 'DONE!'
     end
 
@@ -21,13 +20,7 @@ module ReleaseManager
     long_desc <<-LONGDESC
       Reset all the configs
     LONGDESC
-    def reset
-      ReleaseManager::Client::Github.expire_auth_options
-      ReleaseManager::Client::Jira.expire_auth_options
-      ReleaseManager::Client::Slack.expire_auth_options
-
-      puts 'DONE!'
-    end
+    subcommand 'reset', ReleaseManager::ResetCli
 
     desc 'announce', 'announce a release'
     long_desc <<-LONGDESC
