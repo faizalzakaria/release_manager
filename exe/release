@@ -6,22 +6,4 @@ $LOAD_PATH.unshift(libdir)
 
 require 'release_manager'
 
-def help
-  puts 'Missing or unknown action'
-  puts 'Example:'
-  puts "release prepare"
-  puts "release announce"
-end
-
-if ARGV[0].nil?
-  help
-elsif ARGV[0] == 'prepare'
-  puts "Preparing a release"
-  ReleaseManager.prepare
-elsif ARGV[0] == 'announce'
-  puts "Announcing a release"
-  ReleaseManager.announce
-else
-  help
-end
-
+ReleaseManager::Cli.start(ARGV)

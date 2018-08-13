@@ -10,11 +10,9 @@ module ReleaseManager
     attr_reader :access_token, :pr_id, :repo
 
     def initialize(options = {})
-      @access_token = build_auth_options[:access_token]
-      @repo         = build_auth_options[:repo]
-
-      @pr_id        = options[:pr_id]
-      @dry_run      = options.fetch(:dry_run, false)
+      @pr_id   = options[:pr_id]
+      @dry_run = options.fetch(:dry_run, false)
+      @repo    = Client::Github.build_auth_options[:repo]
     end
 
     # Create Pull Request
@@ -24,7 +22,7 @@ module ReleaseManager
       if pr_id
         update_pr(pr_id, title, notes)
       else
-        create_pr(title_notes)
+        create_pr(title, notes)
       end
     end
 
@@ -70,16 +68,12 @@ module ReleaseManager
 
     private
 
-    def github_client
-      @github_client ||= Octokit::Client.new(access_token: access_token)
-    end
-
     def pull_merged?
-      github_client.pull_merged?(repo, pr)
+      Client::Github.client.pull_merged?(repo, pr_id)
     end
 
     def pull_request
-      github_client.close_pull_request(repo, pr)
+      Client::Github.client.close_pull_request(repo, pr_id)
     end
 
     def merge_commit_sha
@@ -91,7 +85,7 @@ module ReleaseManager
     end
 
     def create_pr(title, notes)
-      github_client.create_pull_request(
+      Client::Github.client.create_pull_request(
         repo,
         'master',
         'develop',
@@ -101,7 +95,7 @@ module ReleaseManager
     end
 
     def update_pr(pr_id, title, notes)
-      github_client.update_pull_request(
+      Client::Github.client.update_pull_request(
         repo,
         pr_id,
         title: title,
@@ -110,7 +104,7 @@ module ReleaseManager
     end
 
     def create_release
-      github_client.create_release(
+      Client::Github.client.create_release(
         repo,
         tag_name,
         body: release_notes,
@@ -118,10 +112,6 @@ module ReleaseManager
         draft: false,
         target_commitish: merge_commit_sha
       )
-    end
-
-    def build_auth_options
-      ReleaseManager::AuthOptionBuilder::Github.build_auth_options
     end
   end
 end

@@ -6,23 +6,24 @@ module ReleaseManager
   module NotesGenerator
     module Jira
       class Base
-        attr_reader :project, :sprint, :max_results
+        attr_reader :sprint, :max_results
 
         def initialize(sprint:, max_results: 50, custom_jql: nil)
-          @project     = build_auth_options[:project]
           @sprint      = sprint
           @max_results = max_results
           @jql         = custom_jql
         end
 
         def generate
-          issues = client.Issue.jql(jql, max_results: max_results)
-          MarkdownRenderer.new(issues, domain: build_auth_options[:site], epics: epics).render
+          issues = jira.client.Issue.jql(jql, max_results: max_results)
+          MarkdownRenderer.new(issues, domain: jira.site, epics: epics).render
         end
+
+        private
 
         def epics
           @epics ||= begin
-                       issues = client.Issue.jql(epics_jql, max_results: 100)
+                       issues = jira.client.Issue.jql(epics_jql, max_results: 100)
                        issues.each_with_object({}) do |issue, memo|
                          key = issue.attrs['key']
                          memo[key] = issue.attrs['fields']['summary']
@@ -30,22 +31,21 @@ module ReleaseManager
                      end
         end
 
-        private
-
-        def client
-          @client ||= JIRA::Client.new(build_auth_options)
+        def jira
+          ReleaseManager::Client::Jira
         end
 
         def jql
-          @jql ||= "project = \"#{project}\" AND issuetype in (Bug, Story, Task) AND status in (Closed, Done, \"For QA review\", \"For acceptance\", \"For code review\") AND Sprint = \"#{sprint}\""
+          @jql ||= [
+            "project = \"#{jira.project}\"",
+            'issuetype in (Bug, Story, Task)',
+            'status in (Closed, Done, "For QA review", "For acceptance", "For code review")',
+            "Sprint = \"#{sprint}\""
+          ].join(' AND ')
         end
 
         def epics_jql
-          @epics_jql ||= "project = \"#{project}\" AND issuetype in (Epic)"
-        end
-
-        def build_auth_options
-          ReleaseManager::AuthOptionBuilder::Jira.build_auth_options
+          @epics_jql ||= "project = \"#{jira.project}\" AND issuetype in (Epic)"
         end
       end
     end

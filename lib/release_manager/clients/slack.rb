@@ -1,13 +1,17 @@
 # frozen_string_literal: true
 
-#
-# Slack
-#
 module ReleaseManager
-  module AuthOptionBuilder
-    class Slack < Base
+  module Client
+    #
+    # Slack Client
+    #
+    class Slack
       class << self
-        def build_auth_options_by_tty(_options = {})
+        include AuthOptionBuilder
+
+        def build_auth_options_by_tty
+          puts 'Configuring Slack ...'
+
           prompt = TTY::Prompt.new
 
           result = prompt.collect do
@@ -17,6 +21,16 @@ module ReleaseManager
 
           result
         end
+
+        def webhook_url
+          build_auth_options[:webhook_url]
+        end
+
+        def channel
+          build_auth_options[:channel]
+        end
+
+        private
 
         def auth_cache_key
           'auth-slack'

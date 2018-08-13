@@ -1,38 +1,39 @@
 # frozen_string_literal: true
 
 module ReleaseManager
-  #
-  # Slack notifier
-  #
-  class Slack
-    attr_reader :webhook_url, :channel
+  module Notifier
+    #
+    # Slack notifier
+    #
+    class Slack < Base
+      class << self
+        def notify(text, user:, dry_run: false)
+          encoded_params = "payload=#{build_payload(text, user)}"
+          if dry_run
+            puts "curl -X POST --data-urlencode '#{encoded_params}' #{webhook_url}"
+          else
+            `curl -X POST --data-urlencode '#{encoded_params}' #{webhook_url}`
+          end
+        end
 
-    def initialize
-      @webhook_url = build_auth_options[:webhook_url]
-      @channel     = build_auth_options[:channel] || '#news'
-    end
+        private
 
-    def notify(text, user, opts = {})
-      encoded_params = "payload=#{build_payload(text, user)}"
-      if opts[:dry_run]
-        puts "curl -X POST --data-urlencode '#{encoded_params}' #{@webhook_url}"
-      else
-        `curl -X POST --data-urlencode '#{encoded_params}' #{@webhook_url}`
+        def build_payload(text, user)
+          {
+            channel: channel,
+            username: user,
+            text: text
+          }.to_json.to_s
+        end
+
+        def webhook_url
+          ReleaseManager::Client::Slack.webhook_url
+        end
+
+        def channel
+          ReleaseManager::Client::Slack.channel
+        end
       end
-    end
-
-    private
-
-    def build_payload(text, user)
-      {
-        channel: channel,
-        username: user,
-        text: text
-      }.to_json.to_s
-    end
-
-    def build_auth_options
-      ReleaseManager::AuthOptionBuilder::Slack.build_auth_options
     end
   end
 end

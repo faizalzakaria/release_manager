@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
-#
-# Jira
-#
 module ReleaseManager
-  module AuthOptionBuilder
-    class Jira < Base
+  module Client
+    #
+    # Jira Client
+    #
+    class Jira
       class << self
-        def build_auth_options_by_tty(_options = {})
-          puts 'Login will be required...'
+        include AuthOptionBuilder
+
+        def build_auth_options_by_tty
+          puts 'Configuring Jira ...'
           prompt = TTY::Prompt.new
 
           result = prompt.collect do
@@ -20,10 +22,24 @@ module ReleaseManager
           end
 
           result[:auth_type] = :basic
-          result[:use_ssl] ||= false if result[:site] =~ /http\:\/\//
+          result[:use_ssl] ||= false if result[:site] =~ %r{http://}
 
           result
         end
+
+        def client
+          @client ||= JIRA::Client.new(build_auth_options)
+        end
+
+        def project
+          build_auth_options[:project]
+        end
+
+        def site
+          build_auth_options[:site]
+        end
+
+        private
 
         def auth_cache_key
           'auth-jira'
