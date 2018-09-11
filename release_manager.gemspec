@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = 'release_manager'
-  spec.version       = '0.0.1'
+  spec.version       = '0.0.2'
   spec.authors       = ['Faizal Zakaria']
   spec.email         = ['fai@code3.io']
 
@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'jira-ruby', '>= 0'
   spec.add_runtime_dependency 'json', '>= 0'
   spec.add_runtime_dependency 'octokit', '>= 0'
-  spec.add_runtime_dependency 'thor', '~> 0.20.0'
+  spec.add_runtime_dependency 'thor', '>= 0.19.0'
   spec.add_runtime_dependency 'tty-prompt', '~> 0.16.1'
 
   spec.add_development_dependency 'bundler', '~> 1.16'
