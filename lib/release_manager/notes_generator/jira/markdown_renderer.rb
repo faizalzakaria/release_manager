@@ -99,11 +99,13 @@ class MarkdownRenderer
     links = render_links(item)
     title = "#{title} #{links}" if links
 
+    resolution = (item.attrs['fields']['resolution']&.fetch('name') || 'Done').upcase
+
     # Render as Markdown
     if @html
-      "- <small>[`#{key}`](#{url})</small> #{title}"
+      "- <small>[`#{key}`](#{url})</small> #{title} - #{resolution}"
     else
-      "- [`#{key}`](#{url}) #{title}"
+      "- [`#{key}`](#{url}) #{title} - #{resolution}"
     end
   end
 
