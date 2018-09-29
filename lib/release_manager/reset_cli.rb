@@ -5,6 +5,8 @@ module ReleaseManager
   # Subcommand for Reset
   #
   class ResetCli < Thor
+    namespace "reset"
+
     desc 'all', 'reset all configs'
     def all
       ReleaseManager::Client::Github.expire_auth_options
