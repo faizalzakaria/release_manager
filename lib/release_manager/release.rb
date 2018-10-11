@@ -7,12 +7,14 @@ module ReleaseManager
   # Release
   #
   class Release
-    attr_reader :access_token, :pr_id, :repo
+    attr_reader :access_token, :pr_id, :repo, :from_branch, :to_branch
 
     def initialize(options = {})
-      @pr_id   = options[:pr_id]
-      @dry_run = options.fetch(:dry_run, false)
-      @repo    = Client::Github.build_auth_options[:repo]
+      @pr_id       = options[:pr_id]
+      @from_branch = options[:from_branch]
+      @to_branch   = options[:to_branch]
+      @dry_run     = options.fetch(:dry_run, false)
+      @repo        = Client::Github.build_auth_options[:repo]
     end
 
     # Create Pull Request
@@ -87,8 +89,8 @@ module ReleaseManager
     def create_pr(title, notes)
       Client::Github.client.create_pull_request(
         repo,
-        'master',
-        'develop',
+        to_branch,
+        from_branch,
         title,
         notes
       )

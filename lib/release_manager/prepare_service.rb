@@ -28,6 +28,8 @@ module ReleaseManager
           )
         end
 
+        configs.merge!(prompt.collect { key(:from).ask('From which branch ?', default: 'develop') })
+        configs.merge!(prompt.collect { key(:to).ask('To which branch ?', default: 'master') })
         configs.merge!(prompt.collect { key(:dry_run).yes?('Dry run?') })
         configs
       end
@@ -35,7 +37,9 @@ module ReleaseManager
       def prepare_release(configs)
         Release.new(
           pr_id: configs[:pr_id],
-          dry_run: configs[:dry_run]
+          dry_run: configs[:dry_run],
+          from_branch: configs[:from_branch],
+          to_branch: configs[:to_branch]
         ).prepare(
           configs[:title],
           NotesGenerator.generate_from_jira(
