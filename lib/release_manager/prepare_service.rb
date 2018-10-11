@@ -28,8 +28,8 @@ module ReleaseManager
           )
         end
 
-        configs.merge!(prompt.collect { key(:from).ask('From which branch ?', default: 'develop') })
-        configs.merge!(prompt.collect { key(:to).ask('To which branch ?', default: 'master') })
+        configs.merge!(prompt.collect { key(:from_branch).ask('From which branch ?', default: 'develop') })
+        configs.merge!(prompt.collect { key(:to_branch).ask('To which branch ?', default: 'master') })
         configs.merge!(prompt.collect { key(:dry_run).yes?('Dry run?') })
         configs
       end
