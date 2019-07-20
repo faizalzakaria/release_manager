@@ -23,6 +23,7 @@ module ReleaseManager
 
       def create_release(configs)
         release = ReleaseManager::Release.new(pr_id: configs[:pr_id], dry_run: configs[:dry_run])
+
         if release.create
           ReleaseManager::Notifier.notify(
             Template.create(
@@ -35,6 +36,10 @@ module ReleaseManager
         else
           puts 'Failed to create a release!'
         end
+      rescue => e
+        puts release.tag_name
+        puts ReleaseManager::Client::Github.repo
+        puts e.message
       end
     end
   end

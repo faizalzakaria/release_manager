@@ -14,7 +14,7 @@ module ReleaseManager
     #
     class FileCache
       MAX_DEPTH = 32
-      ROOT_DIR = ENV['HOME'] ? "#{ENV['HOME']}/.release_manager/" : '~/.release_manager/'
+      ROOT_DIR = ENV['APP_HOME'] ? "#{ENV['APP_HOME']}/.release_manager/" : '~/.release_manager/'
 
       class << self
         def clear_all

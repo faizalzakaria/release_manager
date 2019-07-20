@@ -23,14 +23,19 @@ module ReleaseManager
           configs.merge!(
             prompt.collect do
               key(:sprint).ask("Sprint (ex: 'v3.15 Jul31')", required: true)
-              key(:pr_id).ask('Pull request number, set this if you need to update pull request (ex: 2222))')
             end
           )
         end
 
-        configs.merge!(prompt.collect { key(:from_branch).ask('From which branch ?', default: 'develop') })
-        configs.merge!(prompt.collect { key(:to_branch).ask('To which branch ?', default: 'master') })
-        configs.merge!(prompt.collect { key(:dry_run).yes?('Dry run?') })
+        configs.merge!(
+          prompt.collect do
+            key(:pr_id).ask('Pull request number, set this if you need to update pull request (ex: 2222))')
+            key(:from_branch).ask('From which branch ?', default: 'develop')
+            key(:to_branch).ask('To which branch ?', default: 'master')
+            key(:dry_run).yes?('Dry run?')
+          end
+        )
+
         configs
       end
 
