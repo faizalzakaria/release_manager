@@ -17,6 +17,12 @@ module ReleaseManager
         def generate
           issues = jira.client.Issue.jql(jql, max_results: max_results)
           MarkdownRenderer.new(issues, domain: jira.site, epics: epics).render
+        rescue JIRA::HTTPError => e
+          require 'pry'; binding.pry
+          puts "Failed to generate JIRA notes"
+          puts "Try check if your jql query is correct or auth is correct"
+          puts "Your jql: #{jql}"
+          raise e
         end
 
         private
